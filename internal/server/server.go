@@ -1,4 +1,3 @@
-// START: types
 package server
 
 import (
@@ -12,7 +11,10 @@ type Config struct {
 	CommitLog CommitLog
 }
 
+var _ api.LogServer = (*grpcServer)(nil)
+
 type grpcServer struct {
+	api.UnimplementedLogServer
 	*Config
 }
 
@@ -23,27 +25,16 @@ func newgrpcServer(config *Config) (srv *grpcServer, err error) {
 	return srv, nil
 }
 
-// END: types
-
-// START: newapi
 func NewGRPCServer(config *Config) (*grpc.Server, error) {
 	gsrv := grpc.NewServer()
 	srv, err := newgrpcServer(config)
 	if err != nil {
 		return nil, err
 	}
-	api.RegisterLogService(gsrv, &api.LogService{
-		Produce:       srv.Produce,
-		Consume:       srv.Consume,
-		ConsumeStream: srv.ConsumeStream,
-		ProduceStream: srv.ProduceStream,
-	})
+	api.RegisterLogServer(gsrv, srv)
 	return gsrv, nil
 }
 
-// END: newapi
-
-// START: request_response
 func (s *grpcServer) Produce(ctx context.Context, req *api.ProduceRequest) (
 	*api.ProduceResponse, error) {
 	offset, err := s.CommitLog.Append(req.Record)
@@ -62,9 +53,6 @@ func (s *grpcServer) Consume(ctx context.Context, req *api.ConsumeRequest) (
 	return &api.ConsumeResponse{Record: record}, nil
 }
 
-// END: request_response
-
-// START: stream
 func (s *grpcServer) ProduceStream(
 	stream api.Log_ProduceStreamServer,
 ) error {
@@ -82,8 +70,6 @@ func (s *grpcServer) ProduceStream(
 		}
 	}
 }
-
-// START: consume_stream
 
 func (s *grpcServer) ConsumeStream(
 	req *api.ConsumeRequest,
@@ -110,13 +96,7 @@ func (s *grpcServer) ConsumeStream(
 	}
 }
 
-// END: consume_stream
-// END: stream
-
-// START: commitlog
 type CommitLog interface {
 	Append(*api.Record) (uint64, error)
 	Read(uint64) (*api.Record, error)
 }
-
-// END: commitlog
