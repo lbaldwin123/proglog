@@ -4,13 +4,16 @@ package log.v1;
 
 option go_package = "github.com/lbaldwin123/api/log_v1";
 
+// START: service
 service Log {
   rpc Produce(ProduceRequest) returns (ProduceResponse) {}
   rpc Consume(ConsumeRequest) returns (ConsumeResponse) {}
   rpc ConsumeStream(ConsumeRequest) returns (stream ConsumeResponse) {}
   rpc ProduceStream(stream ProduceRequest) returns (stream ProduceResponse) {}
 }
+// END: service
 
+// START: apis
 message ProduceRequest  {
   Record record = 1;
 }
@@ -26,6 +29,7 @@ message ConsumeRequest {
 message ConsumeResponse {
   Record record = 2;
 }
+// END: apis
 
 message Record {
   bytes value = 1;
