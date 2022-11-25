@@ -14,10 +14,10 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
-	api "github.com/travisjeffery/proglog/api/v1"
-	"github.com/travisjeffery/proglog/internal/auth"
-	"github.com/travisjeffery/proglog/internal/config"
-	"github.com/travisjeffery/proglog/internal/log"
+	api "github.com/lbaldwin123/proglog/api/v1"
+	"github.com/lbaldwin123/proglog/internal/auth"
+	"github.com/lbaldwin123/proglog/internal/config"
+	"github.com/lbaldwin123/proglog/internal/log"
 )
 
 // START: func_update
