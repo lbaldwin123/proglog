@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/tysontate/gommap"
+	"github.com/tysonmote/gommap"
 )
 
 var (
@@ -103,4 +103,5 @@ func (i *index) Write(off uint32, pos uint64) error {
 func (i *index) Name() string {
 	return i.file.Name()
 }
+
 // END: name
